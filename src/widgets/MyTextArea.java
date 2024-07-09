@@ -5,10 +5,12 @@
  */
 package widgets;
 
+import javax.swing.JTextArea;
+
 /**
  *
  * @author ZAFL
  */
-public class MyTable {
-    
+public class MyTextArea extends JTextArea {
+
 }

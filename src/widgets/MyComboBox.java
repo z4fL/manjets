@@ -5,10 +5,12 @@
  */
 package widgets;
 
+import javax.swing.JComboBox;
+
 /**
  *
  * @author ZAFL
  */
-public class MyComboBox {
+public class MyComboBox extends JComboBox<Object> {
     
 }

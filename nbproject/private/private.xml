@@ -2,21 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/ManjeTs/src/database/Connection.java</file>
-            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/ManjeTs/src/widgets/MyComboBox.java</file>
-            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/ManjeTs/src/model/Kategori.java</file>
-            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/ManjeTs/src/widgets/MyButton.java</file>
-            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/ManjeTs/src/widgets/MyTextField.java</file>
-            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/ManjeTs/src/model/Proyek.java</file>
-            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/ManjeTs/src/model/Tugas.java</file>
-            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/ManjeTs/src/main/Main.java</file>
-            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/ManjeTs/src/widgets/MyTable.java</file>
-            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/ManjeTs/src/service/CRUD.java</file>
-            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/ManjeTs/src/controller/TugasController.java</file>
-            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/ManjeTs/src/error/AllError.java</file>
-            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/ManjeTs/src/view/Dashboard.java</file>
-            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/ManjeTs/src/widgets/MyPanel.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

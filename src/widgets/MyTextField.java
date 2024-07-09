@@ -5,10 +5,12 @@
  */
 package widgets;
 
+import javax.swing.JTextField;
+
 /**
  *
  * @author ZAFL
  */
-public class MyTextField {
-    
+public class MyTextField extends JTextField {
+
 }

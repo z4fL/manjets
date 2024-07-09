@@ -5,10 +5,12 @@
  */
 package widgets;
 
+import javax.swing.JButton;
+
 /**
  *
  * @author ZAFL
  */
-public class MyButton {
+public class MyButton extends JButton {
     
 }
