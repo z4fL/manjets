@@ -12,12 +12,13 @@ import model.combobox.CBProyekModel;
  *
  * @author ZAFL
  */
-public class MyComboBoxProyek extends JComboBox<Object> {
+public class MyComboBoxProyek extends JComboBox<CBProyekModel> {
 
     public MyComboBoxProyek() {
         super();
     }
 
+    @Override
     public void addItem(CBProyekModel item) {
         super.addItem(item);
     }

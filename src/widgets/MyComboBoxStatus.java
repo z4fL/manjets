@@ -6,31 +6,29 @@
 package widgets;
 
 import javax.swing.JComboBox;
-import model.combobox.CBKategoriModel;
+import model.combobox.CBProyekModel;
+import model.combobox.CBStatusModel;
 
 /**
  *
  * @author ZAFL
  */
-public class MyComboBoxKategori extends JComboBox<CBKategoriModel> {
+public class MyComboBoxStatus extends JComboBox<CBStatusModel> {
 
-    public MyComboBoxKategori() {
+    public MyComboBoxStatus() {
         super();
     }
 
     @Override
-    public void addItem(CBKategoriModel item) {
+    public void addItem(CBStatusModel item) {
         super.addItem(item);
     }
 
-    @Override
-    public void removeItem(Object anObject) {
-        if (anObject instanceof CBKategoriModel) {
-            super.removeItem(anObject);
-        }
+    public void removeItem(CBProyekModel item) {
+        super.removeItem(item);
     }
 
-    public boolean containsItem(CBKategoriModel item) {
+    public boolean containsItem(CBProyekModel item) {
         for (int i = 0; i < getItemCount(); i++) {
             if (getItemAt(i).equals(item)) {
                 return true;
@@ -39,11 +37,11 @@ public class MyComboBoxKategori extends JComboBox<CBKategoriModel> {
         return false;
     }
 
-    public CBKategoriModel getItemByName(String name) {
+    public CBProyekModel getItemByName(String name) {
         for (int i = 0; i < getItemCount(); i++) {
-            CBKategoriModel item = getItemAt(i);
-            if (item.getNama().equals(name)) {
-                return item;
+            Object item = getItemAt(i);
+            if (item instanceof CBProyekModel && ((CBProyekModel) item).getNama().equals(name)) {
+                return (CBProyekModel) item;
             }
         }
         return null;

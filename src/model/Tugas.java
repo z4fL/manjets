@@ -20,6 +20,8 @@ public class Tugas {
     private String status;
     private String kategori;
     private String proyek;
+    private int kategoriId;
+    private int proyekId;
 
     // Constructors
     public Tugas() {
@@ -42,6 +44,15 @@ public class Tugas {
         this.status = status;
         this.kategori = kategoriId;
         this.proyek = proyekId;
+    }
+
+    public Tugas(String judul, String deskripsi, Date tanggalDeadline, String status, int kategoriId, int proyekId) {
+        this.judul = judul;
+        this.deskripsi = deskripsi;
+        this.tanggalDeadline = tanggalDeadline;
+        this.status = status;
+        this.kategoriId = kategoriId;
+        this.proyekId = proyekId;
     }
 
     // Getters and Setters
@@ -99,6 +110,22 @@ public class Tugas {
 
     public void setProyek(String proyek) {
         this.proyek = proyek;
+    }
+
+    public int getKategoriId() {
+        return kategoriId;
+    }
+
+    public void setKategoriId(int kategoriId) {
+        this.kategoriId = kategoriId;
+    }
+
+    public int getProyekId() {
+        return proyekId;
+    }
+
+    public void setProyekId(int proyekId) {
+        this.proyekId = proyekId;
     }
 
 }

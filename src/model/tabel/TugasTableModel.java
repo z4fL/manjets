@@ -16,10 +16,26 @@ import model.Tugas;
 public class TugasTableModel extends AbstractTableModel {
 
     private final List<Tugas> tugasList;
-    private final String[] columnNames = {"No", "Judul", "Deskripsi", "Tanggal Deadline", "Status", "Kategori", "Proyek"};
+    private final String[] columnNames = {"No", "ID", "Kategori", "Judul", "Deskripsi", "Tanggal Deadline", "Status", "Proyek"};
 
     public TugasTableModel(List<Tugas> tugasList) {
         this.tugasList = tugasList;
+    }
+
+    public void addRow(Tugas tugas) {
+        tugasList.add(tugas);
+        fireTableRowsInserted(getRowCount(), getRowCount());
+    }
+
+    public void removeRow(int firstRow, int lastRow) {
+        tugasList.remove(firstRow);
+        fireTableRowsDeleted(firstRow, lastRow);
+    }
+
+    public void removeAll() {
+        int size = tugasList.size();
+        tugasList.clear();
+        fireTableRowsDeleted(0, size);
     }
 
     @Override
@@ -44,16 +60,18 @@ public class TugasTableModel extends AbstractTableModel {
             case 0:
                 return rowIndex + 1;
             case 1:
-                return tugas.getJudul();
+                return tugas.getId();
             case 2:
-                return tugas.getDeskripsi();
-            case 3:
-                return tugas.getTanggalDeadline();
-            case 4:
-                return tugas.getStatus();
-            case 5:
                 return tugas.getKategori();
+            case 3:
+                return tugas.getJudul();
+            case 4:
+                return tugas.getDeskripsi();
+            case 5:
+                return tugas.getTanggalDeadline();
             case 6:
+                return tugas.getStatus();
+            case 7:
                 return tugas.getProyek();
             default:
                 return null;

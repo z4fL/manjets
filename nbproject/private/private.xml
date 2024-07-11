@@ -4,7 +4,11 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/manjets/src/service/CRUD.java</file>
+            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/manjets/src/view/TugasView.java</file>
+            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/manjets/src/widgets/MyComboBoxStatus.java</file>
+            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/manjets/src/model/tabel/TugasTableModel.java</file>
             <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/manjets/src/view/DialogTugas.java</file>
+            <file>file:/C:/Users/Administrator/Documents/NetBeansProjects/manjets/src/widgets/MyPopup.java</file>
         </group>
     </open-files>
 </project-private>

@@ -5,7 +5,6 @@
  */
 package service;
 
-import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,18 +15,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import model.Tugas;
 
 /**
  *
  * @author ZAFL
- * @param <T>
+ *
  */
-public class CRUD<T> {
+public class CRUD {
 
-    private final Class<T> type;
+    public CRUD() {
 
-    public CRUD(Class<T> type) {
-        this.type = type;
     }
 
     public void tambah(Connection conn, String tableName, String[] columns, Object[] values) throws SQLException {
@@ -43,27 +41,51 @@ public class CRUD<T> {
         sql.setLength(sql.length() - 1); // Remove last comma
         sql.append(")");
 
+        String sqlWithValues = sql.toString();
+        StringBuilder sqlDebug = new StringBuilder(sqlWithValues);
+
+        for (Object value : values) {
+            String valueStr = (value instanceof String) ? "'" + value + "'" : value.toString();
+            int index = sqlDebug.indexOf("?");
+            sqlDebug.replace(index, index + 1, valueStr);
+        }
+
+        System.out.println("SQL with values: " + sqlDebug.toString());
+
         try (PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
             for (int i = 0; i < values.length; i++) {
                 stmt.setObject(i + 1, values[i]);
             }
+
             stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return;
         }
+
+        System.out.println("Berhasil tambah data");
     }
 
-    public List getAll(Connection conn, String tableName) throws SQLException, IllegalAccessException, InstantiationException {
-        List list = new ArrayList<>();
-        String sql = "SELECT * FROM " + tableName;
+    // Read with Join
+    public List<Tugas> getAllTugasWithJoin(Connection conn) throws SQLException {
+        List<Tugas> list = new ArrayList<>();
+        String sql = "SELECT t.id, t.judul, t.deskripsi, t.tanggal_deadline, t.status, k.nama AS kategori, p.nama AS proyek "
+                + "FROM tugas t "
+                + "LEFT JOIN kategori k ON t.kategori_id = k.id "
+                + "LEFT JOIN proyek p ON t.proyek_id = p.id";
 
         try (Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                T instance = type.newInstance();
-                for (Field field : type.getDeclaredFields()) {
-                    field.setAccessible(true);
-                    field.set(instance, rs.getObject(field.getName()));
-                }
-                list.add(instance);
+                Tugas tugas = new Tugas();
+                tugas.setId(rs.getInt("id"));
+                tugas.setJudul(rs.getString("judul"));
+                tugas.setDeskripsi(rs.getString("deskripsi"));
+                tugas.setTanggalDeadline(rs.getDate("tanggal_deadline"));
+                tugas.setStatus(rs.getString("status"));
+                tugas.setKategori(rs.getString("kategori"));
+                tugas.setProyek(rs.getString("proyek"));
+                list.add(tugas);
             }
         }
         return list;
@@ -88,8 +110,6 @@ public class CRUD<T> {
 
         } catch (SQLException ex) {
             System.err.println("Error in getList " + ex.getMessage());
-        } finally {
-            conn.close();
         }
 
         return list;

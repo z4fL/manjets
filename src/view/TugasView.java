@@ -5,9 +5,20 @@
  */
 package view;
 
+import database.MyConnection;
 import java.awt.Frame;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
+import model.Tugas;
+import model.tabel.TugasTableModel;
+import service.CRUD;
+import widgets.MyPopup;
 
 /**
  *
@@ -15,19 +26,38 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
  */
 public class TugasView extends javax.swing.JInternalFrame {
 
-    boolean isOnEdit;
-    DialogTugas dialogTugas = new DialogTugas((Frame) SwingUtilities.getWindowAncestor(this), true);
+    public int selectedBaris = -1;
+
+    Connection conn;
+    DialogTugas dialogTugas = new DialogTugas((Frame) SwingUtilities.getWindowAncestor(this), this, true);
+    MyPopup popupMenu = new MyPopup(this);
+
+    CRUD crud = new CRUD();
 
     /**
      * Creates new form TugasView
      */
     public TugasView() {
         initComponents();
+
         ((BasicInternalFrameUI) this.getUI()).setNorthPane(null);
         ((BasicInternalFrameUI) this.getUI()).setEastPane(null);
         ((BasicInternalFrameUI) this.getUI()).setSouthPane(null);
         ((BasicInternalFrameUI) this.getUI()).setWestPane(null);
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+        try {
+            conn = (Connection) MyConnection.getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        popupMenu.setInvoker(tableTugas);
+
+        initTable();
+    }
+
+    public JTable getTable() {
+        return tableTugas;
     }
 
     /**
@@ -52,15 +82,17 @@ public class TugasView extends javax.swing.JInternalFrame {
 
         tableTugas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
+        tableTugas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                tableTugasMouseReleased(evt);
+            }
+        });
         jScrollPane.setViewportView(tableTugas);
 
         myButton1.setText("Tambah");
@@ -106,21 +138,63 @@ public class TugasView extends javax.swing.JInternalFrame {
         showDialog(false);
     }//GEN-LAST:event_myButton1ActionPerformed
 
+    private void tableTugasMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableTugasMouseReleased
+        if (evt.isPopupTrigger()) {
+            JTable source = (JTable) evt.getSource();
+            int row = source.rowAtPoint(evt.getPoint());
+            int column = source.columnAtPoint(evt.getPoint());
+
+            if (!source.isRowSelected(row)) {
+                source.changeSelection(row, column, false, false);
+            }
+            popupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+            selectedBaris = tableTugas.getSelectedRow();
+        }
+    }//GEN-LAST:event_tableTugasMouseReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane;
     private javax.swing.JLabel lblTitle;
     private widgets.MyButton myButton1;
-    private javax.swing.JTable tableTugas;
+    public javax.swing.JTable tableTugas;
     // End of variables declaration//GEN-END:variables
+
+    public int getSelectedRow() {
+        return tableTugas.getSelectedRow();
+    }
 
     private void showDialog(boolean isOnEdit) {
         if (isOnEdit) {
-            this.isOnEdit = true;
+            dialogTugas.isOnEdit = false;
         }
 
         dialogTugas.setLocationRelativeTo(null);
         dialogTugas.setVisible(true);
+    }
+
+    public void editDialog(boolean isonEdit) {
+        int baris = selectedBaris;
+
+    }
+
+    public void initTable() {
+        try {
+            List<Tugas> semuaTugas = crud.getAllTugasWithJoin(conn);
+            TugasTableModel model = new TugasTableModel(semuaTugas);
+            tableTugas.setModel(model);
+
+            int col[] = {1, 4};
+            for (int i : col) {
+                tableTugas.getColumnModel().getColumn(i).setMinWidth(0);
+                tableTugas.getColumnModel().getColumn(i).setMaxWidth(0);
+                tableTugas.getColumnModel().getColumn(i).setWidth(0);
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            Logger.getLogger(TugasView.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

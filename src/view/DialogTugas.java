@@ -5,16 +5,23 @@
  */
 package view;
 
-import database.Connection;
+import database.MyConnection;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import javax.swing.JComboBox;
-import model.Kategori;
+import model.Tugas;
 import model.combobox.CBKategoriModel;
+import model.combobox.CBProyekModel;
+import model.combobox.CBStatusModel;
 import service.CRUD;
 import widgets.MyComboBoxKategori;
+import widgets.MyComboBoxProyek;
+import widgets.MyComboBoxStatus;
 
 /**
  *
@@ -22,8 +29,13 @@ import widgets.MyComboBoxKategori;
  */
 public class DialogTugas extends javax.swing.JDialog {
 
-    CRUD<Kategori> crudKategori = new CRUD<>(Kategori.class);
+    public boolean isOnEdit = false;
+    private TugasView tugasView;
+
+    CRUD crud = new CRUD();
     Date date = new Date();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    Connection conn;
 
     /**
      * Creates new form MyDialog
@@ -31,11 +43,56 @@ public class DialogTugas extends javax.swing.JDialog {
      * @param parent
      * @param modal
      */
-    public DialogTugas(java.awt.Frame parent, boolean modal) {
+    public DialogTugas(java.awt.Frame parent, TugasView tugasView, boolean modal) {
         super(parent, modal);
+        this.tugasView = tugasView;
         initComponents();
+
+        txtID.setVisible(false);
+        jLabel7.setVisible(false);
+        comboBoxStatus.setVisible(false);
         addCBKategoriItem(comboBoxKategori);
+        addCBProyekItem(comboBoxProyek);
+        addCBStatusItem(comboBoxStatus);
         dateChooserDeadline.setDate(date);
+
+        try {
+            conn = (Connection) MyConnection.getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setID(String id) {
+        this.txtID.setText(id);
+    }
+
+    public void setJudul(String judul) {
+        this.txtJudul.setText(judul);
+    }
+
+    public void setKategori(String kategori) {
+        this.comboBoxKategori.getModel().setSelectedItem(kategori);
+    }
+
+    public void setProyek(String proyek) {
+        this.comboBoxProyek.getModel().setSelectedItem(proyek);
+    }
+
+    public void setDeskripsi(String deksripsi) {
+        this.txtDeskripsi.setText(deksripsi);
+    }
+
+    public void setDeadline(String deadline) {
+        try {
+            this.dateChooserDeadline.setDate(sdf.parse(deadline));
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void setStatus(String status) {
+        this.comboBoxStatus.getModel().setSelectedItem(status);
     }
 
     /**
@@ -52,7 +109,7 @@ public class DialogTugas extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        textDeskripsi = new widgets.MyTextArea();
+        txtDeskripsi = new widgets.MyTextArea();
         jLabel4 = new javax.swing.JLabel();
         dateChooserDeadline = new com.toedter.calendar.JDateChooser();
         jLabel5 = new javax.swing.JLabel();
@@ -60,6 +117,9 @@ public class DialogTugas extends javax.swing.JDialog {
         comboBoxProyek = new widgets.MyComboBoxProyek();
         jLabel6 = new javax.swing.JLabel();
         btnSimpan = new widgets.MyButton();
+        comboBoxStatus = new widgets.MyComboBoxStatus();
+        jLabel7 = new javax.swing.JLabel();
+        txtID = new widgets.MyTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -73,9 +133,9 @@ public class DialogTugas extends javax.swing.JDialog {
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel3.setText("Judul");
 
-        textDeskripsi.setColumns(20);
-        textDeskripsi.setRows(5);
-        jScrollPane1.setViewportView(textDeskripsi);
+        txtDeskripsi.setColumns(20);
+        txtDeskripsi.setRows(5);
+        jScrollPane1.setViewportView(txtDeskripsi);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setText("Tanggal Deadline");
@@ -93,6 +153,9 @@ public class DialogTugas extends javax.swing.JDialog {
             }
         });
 
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel7.setText("Status");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -103,18 +166,22 @@ public class DialogTugas extends javax.swing.JDialog {
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 30, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel4)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
-                    .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel3)
-                    .addComponent(txtJudul, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(comboBoxKategori, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
-                    .addComponent(comboBoxProyek, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(dateChooserDeadline, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel1)
+                        .addComponent(jLabel4)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
+                        .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel6)
+                        .addComponent(jLabel5)
+                        .addComponent(jLabel3)
+                        .addComponent(txtJudul, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(comboBoxKategori, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
+                        .addComponent(comboBoxProyek, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(dateChooserDeadline, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(comboBoxStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(30, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -122,7 +189,9 @@ public class DialogTugas extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addComponent(jLabel2)
-                .addGap(18, 18, 18)
+                .addGap(38, 38, 38)
+                .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtJudul, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -142,16 +211,132 @@ public class DialogTugas extends javax.swing.JDialog {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel7)
+                .addGap(1, 1, 1)
+                .addComponent(comboBoxStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 50, Short.MAX_VALUE)
                 .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(62, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
-        // TODO add your handling code here:
+        if (this.isOnEdit == false) {
+            String judul = txtJudul.getText();
+            int kategoriId = comboBoxKategori.getItemAt(comboBoxKategori.getSelectedIndex()).getId();
+            int proyekId = comboBoxProyek.getItemAt(comboBoxProyek.getSelectedIndex()).getId();
+            String deadline = sdf.format(dateChooserDeadline.getDate());
+            String deskripsi = txtDeskripsi.getText();
+
+            List<String> kolomList = new ArrayList<>();
+            List<Object> valueList = new ArrayList<>();
+
+            if (judul.isEmpty()) {
+
+            } else if (deadline.isEmpty()) {
+
+            } else if (deskripsi.isEmpty()) {
+
+            } else {
+                try {
+                    Tugas t = new Tugas();
+                    t.setJudul(judul);
+                    t.setKategoriId(kategoriId);
+                    t.setProyekId(proyekId);
+                    t.setTanggalDeadline(sdf.parse(deadline));
+                    t.setDeskripsi(deskripsi);
+
+                    kolomList.add("judul");
+                    valueList.add(t.getJudul());
+                    kolomList.add("deskripsi");
+                    valueList.add(t.getDeskripsi());
+                    kolomList.add("tanggal_deadline");
+                    valueList.add(sdf.format(t.getTanggalDeadline()));
+                    if (kategoriId != 0) {
+                        kolomList.add("kategori_id");
+                        valueList.add(String.valueOf(t.getKategoriId()));
+                    }
+                    if (proyekId != 0) {
+                        kolomList.add("proyek_id");
+                        valueList.add(String.valueOf(t.getProyekId()));
+                    }
+
+                    String[] kolom = kolomList.toArray(new String[0]);
+                    String[] values = valueList.toArray(new String[0]);
+
+                    crud.tambah(conn, "tugas", kolom, values);
+                } catch (ParseException | SQLException ex) {
+                    ex.printStackTrace();
+                    return;
+                }
+
+                this.dispose();
+                this.isOnEdit = false;
+            }
+        } else {
+            String id = txtID.getText();
+            String judul = txtJudul.getText();
+            int kategoriId = comboBoxKategori.getItemAt(comboBoxKategori.getSelectedIndex()).getId();
+            int proyekId = comboBoxProyek.getItemAt(comboBoxProyek.getSelectedIndex()).getId();
+            String deadline = sdf.format(dateChooserDeadline.getDate());
+            String deskripsi = txtDeskripsi.getText();
+            String status = comboBoxStatus.getItemAt(comboBoxStatus.getSelectedIndex()).getNama();
+
+            List<String> kolomList = new ArrayList<>();
+            List<Object> valueList = new ArrayList<>();
+
+            if (judul.isEmpty()) {
+
+            } else if (deadline.isEmpty()) {
+
+            } else if (deskripsi.isEmpty()) {
+
+            } else {
+                try {
+                    Tugas t = new Tugas();
+                    t.setId(Integer.parseInt(id));
+                    t.setJudul(judul);
+                    t.setKategoriId(kategoriId);
+                    t.setProyekId(proyekId);
+                    t.setTanggalDeadline(sdf.parse(deadline));
+                    t.setDeskripsi(deskripsi);
+                    t.setStatus(status);
+
+                    kolomList.add("judul");
+                    valueList.add(t.getJudul());
+                    kolomList.add("deskripsi");
+                    valueList.add(t.getDeskripsi());
+                    kolomList.add("tanggal_deadline");
+                    valueList.add(sdf.format(t.getTanggalDeadline()));
+                    if (kategoriId != 0) {
+                        kolomList.add("kategori_id");
+                        valueList.add(String.valueOf(t.getKategoriId()));
+                    }
+                    if (proyekId != 0) {
+                        kolomList.add("proyek_id");
+                        valueList.add(String.valueOf(t.getProyekId()));
+                    }
+                    kolomList.add("status");
+                    valueList.add(t.getStatus());
+
+                    String[] kolom = kolomList.toArray(new String[0]);
+                    String[] values = valueList.toArray(new String[0]);
+
+                    crud.update(conn, "tugas", kolom, values, "id", t.getId());
+                } catch (ParseException | SQLException ex) {
+                    ex.printStackTrace();
+                    return;
+                }
+
+                this.dispose();
+                this.isOnEdit = false;
+
+                tugasView.initTable();
+            }
+        }
     }//GEN-LAST:event_btnSimpanActionPerformed
 
     /**
@@ -187,7 +372,7 @@ public class DialogTugas extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                DialogTugas dialog = new DialogTugas(new javax.swing.JFrame(), true);
+                DialogTugas dialog = new DialogTugas(new javax.swing.JFrame(), new TugasView(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -203,6 +388,7 @@ public class DialogTugas extends javax.swing.JDialog {
     private widgets.MyButton btnSimpan;
     private widgets.MyComboBoxKategori comboBoxKategori;
     private widgets.MyComboBoxProyek comboBoxProyek;
+    public widgets.MyComboBoxStatus comboBoxStatus;
     private com.toedter.calendar.JDateChooser dateChooserDeadline;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -210,8 +396,10 @@ public class DialogTugas extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    public javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
-    private widgets.MyTextArea textDeskripsi;
+    private widgets.MyTextArea txtDeskripsi;
+    public widgets.MyTextField txtID;
     private widgets.MyTextField txtJudul;
     // End of variables declaration//GEN-END:variables
 
@@ -220,8 +408,8 @@ public class DialogTugas extends javax.swing.JDialog {
         comboBox.addItem(new CBKategoriModel(0, "Pilih Kategori"));
 
         try {
-            java.sql.Connection conn = Connection.getConnection();
-            List<Map<String, Object>> dataList = crudKategori.getListComboBox(conn, "kategori");
+            conn = MyConnection.getConnection();
+            List<Map<String, Object>> dataList = crud.getListComboBox(conn, "kategori");
 
             for (Map<String, Object> row : dataList) {
                 comboBox.addItem(
@@ -236,4 +424,31 @@ public class DialogTugas extends javax.swing.JDialog {
         }
     }
 
+    private void addCBProyekItem(MyComboBoxProyek comboBox) {
+        comboBox.removeAllItems();
+        comboBox.addItem(new CBProyekModel(0, "Pilih Proyek"));
+
+        try {
+            conn = MyConnection.getConnection();
+            List<Map<String, Object>> dataList = crud.getListComboBox(conn, "proyek");
+
+            for (Map<String, Object> row : dataList) {
+                comboBox.addItem(
+                        new CBProyekModel(
+                                Integer.parseInt(row.get("id").toString()),
+                                String.valueOf(row.get("nama"))
+                        )
+                );
+            }
+        } catch (SQLException e) {
+            System.err.println("Error : " + e.getMessage());
+        }
+    }
+
+    private void addCBStatusItem(MyComboBoxStatus comboBox) {
+        comboBox.removeAllItems();
+        comboBox.addItem(new CBStatusModel("Belum Selesai"));
+        comboBox.addItem(new CBStatusModel("Selesai"));
+
+    }
 }

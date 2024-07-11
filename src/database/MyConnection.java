@@ -12,7 +12,7 @@ import java.sql.SQLException;
  *
  * @author ZAFL
  */
-public class Connection {
+public class MyConnection {
 
     private static java.sql.Connection koneksi;
 

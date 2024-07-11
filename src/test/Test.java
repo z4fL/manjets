@@ -1,6 +1,6 @@
 package test;
 
-import database.Connection;
+import database.MyConnection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +24,7 @@ public class Test {
     public static void main(String[] args) {
 
         try {
-            Connection.getConnection();
+            MyConnection.getConnection();
 
         } catch (SQLException e) {
             System.out.println("Error Koneksi");
