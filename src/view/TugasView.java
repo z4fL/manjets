@@ -95,6 +95,7 @@ public class TugasView extends javax.swing.JInternalFrame {
         });
         jScrollPane.setViewportView(tableTugas);
 
+        myButton1.setForeground(new java.awt.Color(255, 255, 255));
         myButton1.setText("Tambah");
         myButton1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         myButton1.addActionListener(new java.awt.event.ActionListener() {

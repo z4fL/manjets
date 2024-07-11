@@ -48,6 +48,9 @@ public class DialogTugas extends javax.swing.JDialog {
         this.tugasView = tugasView;
         initComponents();
 
+        jScrollPane1.getViewport().setOpaque(false);
+        jScrollPane1.setOpaque(false);
+        
         txtID.setVisible(false);
         jLabel7.setVisible(false);
         comboBoxStatus.setVisible(false);

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jul 09, 2024 at 01:06 PM
+-- Generation Time: Jul 11, 2024 at 06:04 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.2.20
 
@@ -20,7 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `manjets`
 --
-CREATE DATABASE IF NOT EXISTS `manjets` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+CREATE DATABASE IF NOT EXISTS `manjets` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `manjets`;
 
 -- --------------------------------------------------------
@@ -32,7 +32,7 @@ USE `manjets`;
 CREATE TABLE `kategori` (
   `id` int NOT NULL,
   `nama` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `kategori`
@@ -60,7 +60,7 @@ CREATE TABLE `proyek` (
   `id` int NOT NULL,
   `nama` varchar(255) NOT NULL,
   `deskripsi` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -73,10 +73,18 @@ CREATE TABLE `tugas` (
   `judul` varchar(255) NOT NULL,
   `deskripsi` text NOT NULL,
   `tanggal_deadline` date NOT NULL,
-  `status` enum('selesai','belum selesai') NOT NULL,
-  `kategori_id` int NOT NULL,
-  `proyek_id` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `status` enum('Selesai','Belum Selesai') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Belum Selesai',
+  `kategori_id` int DEFAULT NULL,
+  `proyek_id` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tugas`
+--
+
+INSERT INTO `tugas` (`id`, `judul`, `deskripsi`, `tanggal_deadline`, `status`, `kategori_id`, `proyek_id`) VALUES
+(2, 'aku baik hait', 'fafafafafaf', '2024-07-13', 'Belum Selesai', 5, NULL),
+(3, 'lololololol', 'ololololol', '2024-07-13', 'Belum Selesai', 3, NULL);
 
 --
 -- Indexes for dumped tables
@@ -123,7 +131,7 @@ ALTER TABLE `proyek`
 -- AUTO_INCREMENT for table `tugas`
 --
 ALTER TABLE `tugas`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
