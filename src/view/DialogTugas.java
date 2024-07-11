@@ -215,9 +215,9 @@ public class DialogTugas extends javax.swing.JDialog {
                 .addComponent(jLabel7)
                 .addGap(1, 1, 1)
                 .addComponent(comboBoxStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 50, Short.MAX_VALUE)
-                .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(62, Short.MAX_VALUE))
+                .addGap(34, 34, 34)
+                .addComponent(btnSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(45, Short.MAX_VALUE))
         );
 
         pack();
@@ -333,10 +333,9 @@ public class DialogTugas extends javax.swing.JDialog {
 
                 this.dispose();
                 this.isOnEdit = false;
-
-                tugasView.initTable();
             }
         }
+        tugasView.initTable();
     }//GEN-LAST:event_btnSimpanActionPerformed
 
     /**
