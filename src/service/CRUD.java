@@ -9,10 +9,13 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  *
@@ -63,6 +66,32 @@ public class CRUD<T> {
                 list.add(instance);
             }
         }
+        return list;
+    }
+
+    public List<Map<String, Object>> getListComboBox(Connection conn, String tableName) throws SQLException {
+        List<Map<String, Object>> list = new ArrayList<>();
+        String sql = "SELECT id, nama FROM " + tableName;
+        try (Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
+
+            ResultSetMetaData md = rs.getMetaData();
+            int columns = md.getColumnCount();
+
+            while (rs.next()) {
+                Map<String, Object> row = new HashMap<>(columns);
+                for (int i = 1; i <= columns; ++i) {
+                    row.put(md.getColumnName(i), rs.getObject(i));
+                }
+                list.add(row);
+            }
+
+        } catch (SQLException ex) {
+            System.err.println("Error in getList " + ex.getMessage());
+        } finally {
+            conn.close();
+        }
+
         return list;
     }
 

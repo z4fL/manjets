@@ -5,6 +5,8 @@
  */
 package view;
 
+import java.awt.Frame;
+import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
 /**
@@ -12,6 +14,9 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
  * @author ZAFL
  */
 public class TugasView extends javax.swing.JInternalFrame {
+
+    boolean isOnEdit;
+    DialogTugas dialogTugas = new DialogTugas((Frame) SwingUtilities.getWindowAncestor(this), true);
 
     /**
      * Creates new form TugasView
@@ -60,6 +65,11 @@ public class TugasView extends javax.swing.JInternalFrame {
 
         myButton1.setText("Tambah");
         myButton1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        myButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                myButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -92,6 +102,10 @@ public class TugasView extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void myButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_myButton1ActionPerformed
+        showDialog(false);
+    }//GEN-LAST:event_myButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane;
@@ -99,4 +113,14 @@ public class TugasView extends javax.swing.JInternalFrame {
     private widgets.MyButton myButton1;
     private javax.swing.JTable tableTugas;
     // End of variables declaration//GEN-END:variables
+
+    private void showDialog(boolean isOnEdit) {
+        if (isOnEdit) {
+            this.isOnEdit = true;
+        }
+
+        dialogTugas.setLocationRelativeTo(null);
+        dialogTugas.setVisible(true);
+    }
+
 }

@@ -17,7 +17,6 @@ public class Tugas {
     private String judul;
     private String deskripsi;
     private Date tanggalDeadline;
-    private String prioritas;
     private String status;
     private String kategori;
     private String proyek;
@@ -26,28 +25,24 @@ public class Tugas {
     public Tugas() {
     }
 
-    public Tugas(int id, String judul, String deskripsi, Date tanggalDeadline, String prioritas, String status, String kategoriId, String proyekId) {
+    public Tugas(int id, String judul, String deskripsi, Date tanggalDeadline, String status, String kategoriId, String proyekId) {
         this.id = id;
         this.judul = judul;
         this.deskripsi = deskripsi;
         this.tanggalDeadline = tanggalDeadline;
-        this.prioritas = prioritas;
         this.status = status;
         this.kategori = kategoriId;
         this.proyek = proyekId;
     }
 
-    public Tugas(String judul, String deskripsi, Date tanggalDeadline, String prioritas, String status, String kategoriId, String proyekId) {
+    public Tugas(String judul, String deskripsi, Date tanggalDeadline, String status, String kategoriId, String proyekId) {
         this.judul = judul;
         this.deskripsi = deskripsi;
         this.tanggalDeadline = tanggalDeadline;
-        this.prioritas = prioritas;
         this.status = status;
         this.kategori = kategoriId;
         this.proyek = proyekId;
     }
-    
-    
 
     // Getters and Setters
     public int getId() {
@@ -82,14 +77,6 @@ public class Tugas {
         this.tanggalDeadline = tanggalDeadline;
     }
 
-    public String getPrioritas() {
-        return prioritas;
-    }
-
-    public void setPrioritas(String prioritas) {
-        this.prioritas = prioritas;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -114,5 +101,4 @@ public class Tugas {
         this.proyek = proyek;
     }
 
-    
 }

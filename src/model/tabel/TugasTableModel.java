@@ -13,7 +13,6 @@ import model.Tugas;
  *
  * @author ZAFL
  */
-
 public class TugasTableModel extends AbstractTableModel {
 
     private final List<Tugas> tugasList;
@@ -51,12 +50,10 @@ public class TugasTableModel extends AbstractTableModel {
             case 3:
                 return tugas.getTanggalDeadline();
             case 4:
-                return tugas.getPrioritas();
-            case 5:
                 return tugas.getStatus();
-            case 6:
+            case 5:
                 return tugas.getKategori();
-            case 7:
+            case 6:
                 return tugas.getProyek();
             default:
                 return null;
